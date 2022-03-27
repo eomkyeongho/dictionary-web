@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const { MongoDBNamespace } = require('mongodb');
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/public', express.static('public'));
 
 var db;
 const MongoClient = require('mongodb').MongoClient;
@@ -21,12 +22,12 @@ MongoClient.connect('mongodb+srv://admin:qwer1234@cluster0.scygd.mongodb.net/myF
 
 app.get('/', function(request, response)
 {
-    response.sendFile(__dirname + '/index.html');
+    response.render('index.ejs');
 });
 
 app.get('/write', function(request, response)
 {
-    response.sendFile(__dirname + '/write.html');
+    response.render('write.ejs');
 });
 
 app.get('/list', function(request, response)
@@ -43,18 +44,26 @@ app.post('/add', function(request, response)
     {
         db.collection('post').insertOne({_id : result.totalPost + 1, title : request.body.title, date : request.body.date}, function(err, result)
         {
-            console.log('저장 완료');
             db.collection('counter').updateOne({name:'postNum'}, { $inc : {totalPost:1}}, function(){})
         });
     });
-    response.write("<script>alert('success')</script>");
+    response.write("<script>alert('Success')</script>");
     response.write("<script>window.location=\"/list\"</script>");
 });
 
 app.delete('/delete', function(request, response)
 {
     request.body._id = parseInt(request.body._id);
-    db.collection('post').deleteOne(request.body, function(err, result){});
-    response.write("<script>alert('success')</script>");
-    response.write("<script>window.location=\"/list\"</script>");
+    db.collection('post').deleteOne(request.body, function(err, result)
+    {
+        response.status(200).send({ message : 'success'});                             
+    });
+});
+
+app.get('/detail/:id', function(request, response)
+{
+    db.collection('post').findOne({ _id : parseInt(request.params.id) }, function(err, result)
+    {
+        response.render('detail.ejs', { data : result});
+    });
 });
