@@ -33,15 +33,28 @@ app.get('/list', function(request, response)
 {
     db.collection('post').find().toArray(function(err, result)
     {
-        console.log(result);
         response.render('list.ejs', { posts : result });
     });
 });
 
 app.post('/add', function(request, response)
 {
-    db.collection('post').insertOne({title : request.body.title, date : request.body.date}, function(err, result)
+    db.collection('counter').findOne({name:'postNum'}, function(err, result)
     {
-        console.log('저장 완료');
+        db.collection('post').insertOne({_id : result.totalPost + 1, title : request.body.title, date : request.body.date}, function(err, result)
+        {
+            console.log('저장 완료');
+            db.collection('counter').updateOne({name:'postNum'}, { $inc : {totalPost:1}}, function(){})
+        });
     });
+    response.write("<script>alert('success')</script>");
+    response.write("<script>window.location=\"/list\"</script>");
+});
+
+app.delete('/delete', function(request, response)
+{
+    request.body._id = parseInt(request.body._id);
+    db.collection('post').deleteOne(request.body, function(err, result){});
+    response.write("<script>alert('success')</script>");
+    response.write("<script>window.location=\"/list\"</script>");
 });
