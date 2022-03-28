@@ -18,8 +18,13 @@
   "homepage": "https://github.com/eomkyeongho/Nodejs-mongoDB#readme",
   "dependencies": {
     "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
     "ejs": "^3.1.6",
     "express": "^4.17.3",
-    "mongodb": "^4.4.1"
+    "express-session": "^1.17.2",
+    "method-override": "^3.0.0",
+    "mongodb": "^4.4.1",
+    "passport": "^0.5.2",
+    "passport-local": "^1.0.0"
   }
 }
