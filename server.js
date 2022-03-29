@@ -6,6 +6,9 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const url = require('url');
+
+출처: https://dololak.tistory.com/95 [코끼리를 냉장고에 넣는 방법]
 require('dotenv').config();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -40,7 +43,7 @@ app.get('/write', verification, function(request, response)
     response.render('write.ejs');
 });
 
-app.get('/list', function(request, response)
+app.get('/list', verification, function(request, response)
 {
     db.collection('post').find().toArray(function(err, result)
     {
@@ -115,10 +118,21 @@ app.get('/fail', function(request, response)
     response.send("<script>alert('유효하지 않은 로그인 정보입니다.'); window.location=\"/login\"</script>");
 });
 
+app.get('/search', verification, function(request, response)
+{
+    var _url = url.parse(request.url, true);
+    var params = _url.query;
+
+    db.collection('post').find({title : {$regex:params.data} }).toArray(function(err, result)
+    {
+        response.render('search.ejs', { posts : result});
+    });
+});
+
 function verification(request, response, next)
 {
     if(request.user) { next(); }
-    else { response.redirect('/login'); }
+    else { response.send("<script>alert('로그인이 필요한 작업입니다.'); window.location=\"/login\"</script>"); }
 }
 
 passport.use(new LocalStrategy( // 로그인 유효성 검사
