@@ -14,7 +14,13 @@
   <body>
     <%- include('nav.ejs')%>
     <div class="container mt-4">
-      <form action="/login" method="POST">
+      <form action="/register" method="POST">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+          <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+          </div>
+          <input type="text" name="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
           <div class="input-group mb-3">
               <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroup-sizing-default">ID</span>
@@ -27,9 +33,14 @@
               </div>
               <input type="password" class="form-control" name="pw" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
           </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-default">PW(confirm)</span>
+            </div>
+            <input type="password" class="form-control" name="pw_confirm" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+        </div>
           <div>
-              <button type="submit" class="btn btn-danger">Submit</button>
-              <a class="text-muted ml-3" href="/register">Do you have no account ? Sign up here!</a>
+              <button type="submit" class="btn btn-success">Register</button>
           </div>
         </form>
     </div>

@@ -53,7 +53,8 @@ app.post('/add', verification, function(request, response)
 {
     db.collection('counter').findOne({name:'postNum'}, function(err, result)
     {
-        db.collection('post').insertOne({_id : result.totalPost + 1, title : request.body.title, date : request.body.date}, function(err, result)
+        var dataSet = {_id : result.totalPost + 1, title : request.body.title, date : request.body.date, name : request.user.result.name, user_id : request.user.result._id};
+        db.collection('post').insertOne(dataSet, function(err, result)
         {
             db.collection('counter').updateOne({name:'postNum'}, { $inc : {totalPost:1}}, function()
             {
@@ -65,11 +66,18 @@ app.post('/add', verification, function(request, response)
 
 app.delete('/delete', verification, function(request, response)
 {
-    request.body._id = parseInt(request.body._id);
-    db.collection('post').deleteOne(request.body, function(err, result)
+    if(request.body.post_user_id == request.user.result._id)
     {
-        response.status(200).send({ message : 'success'});                             
-    });
+        request.body.post_num = parseInt(request.body.post_num);
+        db.collection('post').deleteOne({_id : request.body.post_num}, function(err, result)
+        {
+            response.status(200).send({ message : 'success'});                             
+        });
+    }
+    else
+    {
+        response.status(400).send({ message : 'not valid'});
+    }
 });
 
 app.get('/detail/:id', verification, function(request, response)
@@ -104,6 +112,30 @@ app.get('/login', function(request, response)
 app.post('/login', passport.authenticate('local', {failureRedirect : '/fail'}), function(request, response)
 {
     response.redirect('/');
+});
+
+app.get('/register', function(request, response)
+{
+    response.render('register.ejs');
+});
+
+app.post('/register', function(request, response)
+{
+    if(!request.body.name || !request.body.id || !request.body.pw || !request.body.pw_confirm)
+    {
+        response.send("<script>alert('필수 입력 항목이 입력되지 않았습니다.'); window.location=\"/register\"</script>");
+    }
+    else if(request.body.pw != request.body.pw_confirm)
+    {
+        response.send("<script>alert('비밀번호가 일치하지 않습니다.'); window.location=\"/register\"</script>");
+    }
+    else
+    {
+        db.collection('login').insertOne({ id : request.body.id, pw : request.body.pw, name : request.body.name }, function(err, result)
+        {
+            response.send("<script>alert('회원 가입 완료'); window.location=\"/login\"</script>");
+        });
+    }
 });
 
 app.get('/mypage', verification, function(request, response)

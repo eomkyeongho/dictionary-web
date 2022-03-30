@@ -21,7 +21,8 @@
             <li class="list-group-item">
               <a href="/detail/<%=posts[i]._id%>" style="text-decoration:none;">ToDo title : <%= posts[i].title %><br> 
               Due date : <%= posts[i].date %><br></a>
-              <button type="button" class="btn btn-danger mt-2 delete" data-id="<%=posts[i]._id%>">Delete</button>
+              <p class="text-muted"><%= posts[i].name %></p>
+              <button type="button" class="btn btn-danger delete" data-post="<%=posts[i]._id%>" data-post_user_id="<%=posts[i].user_id%>">Delete</button>
             </li>
         <%}%>
         </ul>
@@ -30,19 +31,21 @@
         <script>
           $('.delete').click(function(e)
           {
-            var postNum = e.target.dataset.id;
+            var post_num = e.target.dataset.post;
+            var post_user_id = e.target.dataset.post_user_id;
             var btn = $(this);
+
             $.ajax
             ({
               method : 'DELETE',
               url : '/delete',
-              data : {_id : postNum}
+              data : {post_num : post_num, post_user_id : post_user_id}
             }).done(function(result)
             {
               btn.parent('li').fadeOut();
             }).fail(function(result)
             {
-
+              alert('해당 게시물 작성자가 아닙니다.');
             });
           });
         </script>
