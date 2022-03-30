@@ -6,9 +6,7 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
-const url = require('url');
 
-출처: https://dololak.tistory.com/95 [코끼리를 냉장고에 넣는 방법]
 require('dotenv').config();
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -120,10 +118,8 @@ app.get('/fail', function(request, response)
 
 app.get('/search', verification, function(request, response)
 {
-    var _url = url.parse(request.url, true);
-    var params = _url.query;
-
-    db.collection('post').find({title : {$regex:params.data} }).toArray(function(err, result)
+    var searchCondition = [{$search : {index : 'titleSearch', text : { query : request.query.data, path : "title"}}}];
+    db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
         response.render('search.ejs', { posts : result});
     });
