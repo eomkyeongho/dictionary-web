@@ -15,9 +15,41 @@
     <%- include('nav.ejs')%>
 
     <div class ="container mt-4">
-        <h4><%=data.name%>`s MyPage<h4>
+      <ul class="list-group">
+        <li class="list-group-item active" aria-current="true">ToDo List</li>
+        <% for(var i=0; i<posts.length; i++)
+        {%>
+          <li class="list-group-item">
+            <a href="/detail/<%=posts[i]._id%>" style="text-decoration:none;">ToDo title : <%= posts[i].title %><br> 
+            Due date : <%= posts[i].date %><br></a>
+            <p class="text-muted"><%= posts[i].name %></p>
+            <button type="button" class="btn btn-danger delete" data-post="<%=posts[i]._id%>" data-post_user_id="<%=posts[i].user_id%>">Delete</button>
+          </li>
+      <%}%>
+      </ul>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+      <script>
+        $('.delete').click(function(e)
+        {
+          var post_num = e.target.dataset.post;
+          var post_user_id = e.target.dataset.post_user_id;
+          var btn = $(this);
+
+          $.ajax
+          ({
+            method : 'DELETE',
+            url : '/delete',
+            data : {post_num : post_num, post_user_id : post_user_id}
+          }).done(function(result)
+          {
+            btn.parent('li').fadeOut();
+          }).fail(function(result)
+          {
+            alert('해당 게시물 작성자가 아닙니다.');
+          });
+        });
+      </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
   </body>
 </html>

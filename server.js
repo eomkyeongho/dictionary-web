@@ -90,17 +90,31 @@ app.get('/detail/:id', verification, function(request, response)
 
 app.get('/edit/:id', verification, function(request, response)
 {
-    db.collection('post').findOne({_id:parseInt(request.params.id)}, function(err, result)
+    db.collection('post').findOne({_id : parseInt(request.params.id), user_id : request.user.result._id}, function(err, result)
     {
-        response.render('edit.ejs', { data : result});
+        if(!result) 
+        {
+            response.send(`<script>alert('해당 게시물 작성자가 아닙니다.'); window.location="/detail/${request.params.id}"</script>`);
+        }
+        else
+        {
+            response.render('edit.ejs', { data : result});
+        }
     });
 });
 
 app.put('/edit', verification, function(request, response)
 {
-    db.collection('post').updateOne({ _id : parseInt(request.body._id)}, { $set : { title : request.body.title, date : request.body.date} }, function(err, result)
+    db.collection('post').updateOne({ _id : parseInt(request.body._id), user_id : request.user.result._id }, { $set : { title : request.body.title, date : request.body.date} }, function(err, result)
     {
-        response.redirect(`/detail/${request.body._id}`);
+        if(!result) 
+        {
+            response.send(`<script>alert('해당 게시물 작성자가 아닙니다.'); window.location="/detail/${request.params.id}"</script>`);
+        }
+        else
+        {
+            response.redirect(`/detail/${request.body._id}`);
+        }
     });
 });
 
@@ -140,7 +154,13 @@ app.post('/register', function(request, response)
 
 app.get('/mypage', verification, function(request, response)
 {
-    response.render('mypage.ejs', { data : request.user.result});
+    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id, path : "user_id"}}}];
+    console.log(request.user.result._id);
+    db.collection('post').aggregate(searchCondition).toArray(function(err, result)
+    {
+        console.log(result);
+        response.render('mypage.ejs', { posts : result});
+    });
 });
 
 app.get('/fail', function(request, response)
