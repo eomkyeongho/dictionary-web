@@ -53,7 +53,8 @@ app.post('/add', verification, function(request, response)
 {
     db.collection('counter').findOne({name:'postNum'}, function(err, result)
     {
-        var dataSet = {_id : result.totalPost + 1, title : request.body.title, date : request.body.date, name : request.user.result.name, user_id : request.user.result._id};
+        var dataSet = {_id : result.totalPost + 1, title : request.body.title, date : request.body.date, name : request.user.result.name, user_id : request.user.result._id.toString()};
+
         db.collection('post').insertOne(dataSet, function(err, result)
         {
             db.collection('counter').updateOne({name:'postNum'}, { $inc : {totalPost:1}}, function()
@@ -66,7 +67,7 @@ app.post('/add', verification, function(request, response)
 
 app.delete('/delete', verification, function(request, response)
 {
-    if(request.body.post_user_id == request.user.result._id)
+    if(request.body.post_user_id == request.user.result._id.toString())
     {
         request.body.post_num = parseInt(request.body.post_num);
         db.collection('post').deleteOne({_id : request.body.post_num}, function(err, result)
@@ -90,7 +91,7 @@ app.get('/detail/:id', verification, function(request, response)
 
 app.get('/edit/:id', verification, function(request, response)
 {
-    db.collection('post').findOne({_id : parseInt(request.params.id), user_id : request.user.result._id}, function(err, result)
+    db.collection('post').findOne({_id : parseInt(request.params.id), user_id : request.user.result._id.toString()}, function(err, result)
     {
         if(!result) 
         {
@@ -105,7 +106,7 @@ app.get('/edit/:id', verification, function(request, response)
 
 app.put('/edit', verification, function(request, response)
 {
-    db.collection('post').updateOne({ _id : parseInt(request.body._id), user_id : request.user.result._id }, { $set : { title : request.body.title, date : request.body.date} }, function(err, result)
+    db.collection('post').updateOne({ _id : parseInt(request.body._id), user_id : request.user.result._id.toString() }, { $set : { title : request.body.title, date : request.body.date} }, function(err, result)
     {
         if(!result) 
         {
@@ -154,12 +155,11 @@ app.post('/register', function(request, response)
 
 app.get('/mypage', verification, function(request, response)
 {
-    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id, path : "user_id"}}}];
-    console.log(request.user.result._id);
+    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id.toString(), path : "user_id"}}}];
+
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
-        console.log(result);
-        response.render('mypage.ejs', { posts : result});
+        response.render('mypage.ejs', { posts : result, user : request.user.result});
     });
 });
 
@@ -171,6 +171,7 @@ app.get('/fail', function(request, response)
 app.get('/search', verification, function(request, response)
 {
     var searchCondition = [{$search : {index : 'titleSearch', text : { query : request.query.data, path : "title"}}}];
+
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
         response.render('search.ejs', { posts : result});

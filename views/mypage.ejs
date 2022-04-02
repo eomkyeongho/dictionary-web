@@ -15,8 +15,9 @@
     <%- include('nav.ejs')%>
 
     <div class ="container mt-4">
+      <h2 class="mb-4"><%=user.name%>`s page</h2>
       <ul class="list-group">
-        <li class="list-group-item active" aria-current="true">ToDo List</li>
+        <li class="list-group-item active" aria-current="true"><%=user.name%>`s ToDo List</li>
         <% for(var i=0; i<posts.length; i++)
         {%>
           <li class="list-group-item">

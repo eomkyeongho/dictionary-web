@@ -23,7 +23,7 @@
             <h6 class="card-subtitle mb-2 text-muted"><%=data.date%></h6>
             <input value="<%=data%>" name="data" style="display:none;">
             <a href="/edit/<%=data._id%>" class="card-link">Edit</a>
-            <a href="/list" class="card-link">Back</a>
+            <a onClick="history.go(-1)" style="cursor:pointer" class="card-link">Back</a>
           </form>
           </div>
     </div>
