@@ -178,6 +178,12 @@ app.get('/search', verification, function(request, response)
     });
 });
 
+app.get('/logout', verification, function(request, response)
+{
+    request.logout();
+    response.send("<script>alert('로그아웃 완료'); window.location=\"/\"</script>");
+});
+
 function verification(request, response, next)
 {
     if(request.user) { next(); }
