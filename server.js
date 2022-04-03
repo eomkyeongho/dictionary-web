@@ -155,7 +155,7 @@ app.post('/register', function(request, response)
 
 app.get('/mypage', verification, function(request, response)
 {
-    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id.toString(), path : "user_id"}}}];
+    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id.toString(), path : "user_id"}}}, { $sort : {date : 1}}];
 
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
@@ -170,7 +170,7 @@ app.get('/fail', function(request, response)
 
 app.get('/search', verification, function(request, response)
 {
-    var searchCondition = [{$search : {index : 'titleSearch', text : { query : request.query.data, path : "title"}}}];
+    var searchCondition = [{$search : {index : 'titleSearch', text : { query : request.query.data, path : "title"}}}, { $sort : {date : 1}}];
 
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
