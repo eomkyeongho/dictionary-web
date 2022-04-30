@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
-    <title>ToDo App</title>
+    <title>Voca App</title>
   </head>
   <body>
     <%- include('nav.ejs')%>
@@ -17,15 +17,15 @@
       <form action="/add" method="POST">
           <div class="input-group mb-3">
               <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-default">To Do</span>
+              <span class="input-group-text" id="inputGroup-sizing-default">어휘</span>
               </div>
-              <input type="text" name="title" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              <input type="text" name="voca" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
           </div>
           <div class="input-group mb-3">
               <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-default">Due date</span>
+              <span class="input-group-text" id="inputGroup-sizing-default">예제</span>
               </div>
-              <input type="text" class="form-control" name="date" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              <input type="text" class="form-control" name="sentence" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
           </div>
           <div>
               <button type="submit" class="btn btn-danger">Submit</button>

@@ -10,7 +10,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
 
-    <title>ToDo App</title>
+    <title>Voca App</title>
   </head>
   <body>
     <%- include('nav.ejs')%>
@@ -19,8 +19,8 @@
         <div class="card" style="width: 100%;">
           <form action="/edit" method="POST">
             <div class="card-body">
-            <h5 class="card-title"><%=data.title%></h5>
-            <h6 class="card-subtitle mb-2 text-muted"><%=data.date%></h6>
+            <h5 class="card-title"><%=data.voca%></h5>
+            <h6 class="card-subtitle mb-2 text-muted"><%=data.sentence%></h6>
             <input value="<%=data%>" name="data" style="display:none;">
             <a href="/edit/<%=data._id%>" class="card-link">Edit</a>
             <a onClick="history.go(-1)" style="cursor:pointer" class="card-link">Back</a>

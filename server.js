@@ -53,7 +53,9 @@ app.post('/add', verification, function(request, response)
 {
     db.collection('counter').findOne({name:'postNum'}, function(err, result)
     {
-        var dataSet = {_id : result.totalPost + 1, title : request.body.title, date : request.body.date, name : request.user.result.name, user_id : request.user.result._id.toString()};
+        var dataSet = {_id : result.totalPost + 1, voca : request.body.voca, sentence : request.body.sentence, name : request.user.result.name, user_id : request.user.result._id.toString()};
+
+        console.log(request.body);
 
         db.collection('post').insertOne(dataSet, function(err, result)
         {
@@ -106,7 +108,7 @@ app.get('/edit/:id', verification, function(request, response)
 
 app.put('/edit', verification, function(request, response)
 {
-    db.collection('post').updateOne({ _id : parseInt(request.body._id), user_id : request.user.result._id.toString() }, { $set : { title : request.body.title, date : request.body.date} }, function(err, result)
+    db.collection('post').updateOne({ _id : parseInt(request.body._id), user_id : request.user.result._id.toString() }, { $set : { voca : request.body.voca, sentence : request.body.sentence} }, function(err, result)
     {
         if(!result) 
         {
@@ -155,7 +157,7 @@ app.post('/register', function(request, response)
 
 app.get('/mypage', verification, function(request, response)
 {
-    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id.toString(), path : "user_id"}}}, { $sort : {date : 1}}];
+    var searchCondition = [{$search : {index : 'idSearch', text : { query : request.user.result._id.toString(), path : "user_id"}}}, { $sort : {sentence : 1}}];
 
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
@@ -170,7 +172,7 @@ app.get('/fail', function(request, response)
 
 app.get('/search', verification, function(request, response)
 {
-    var searchCondition = [{$search : {index : 'titleSearch', text : { query : request.query.data, path : "title"}}}, { $sort : {date : 1}}];
+    var searchCondition = [{$search : {index : 'vocaSearch', text : { query : request.query.data, path : "voca"}}}, { $sort : {sentence : 1}}];
 
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
