@@ -15,6 +15,10 @@ app.use('/public', express.static('public'));
 app.use(session({secret : 'sec', resave : true, saveUninitialized : false}));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function(request, response, next){
+    response.locals.user = request.user;
+    next();
+});
 
 var db;
 const MongoClient = require('mongodb').MongoClient;
@@ -54,8 +58,6 @@ app.post('/add', verification, function(request, response)
     db.collection('counter').findOne({name:'postNum'}, function(err, result)
     {
         var dataSet = {_id : result.totalPost + 1, voca : request.body.voca, sentence : request.body.sentence, name : request.user.result.name, user_id : request.user.result._id.toString()};
-
-        console.log(request.body);
 
         db.collection('post').insertOne(dataSet, function(err, result)
         {
