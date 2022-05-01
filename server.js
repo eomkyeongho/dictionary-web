@@ -6,6 +6,8 @@ const methodOverride = require('method-override');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+const https = require('https');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -35,7 +37,7 @@ MongoClient.connect(process.env.DB_URL, function(err, client)
 
     app.listen(process.env.PORT, function() 
     {
-        console.log('listening on 8080...');
+        console.log('listening on ' + process.env.PORT);
     });
 });
 
