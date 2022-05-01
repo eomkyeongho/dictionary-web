@@ -17,6 +17,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(request, response, next){
     response.locals.user = request.user;
+
+    if(request.user)
+        console.log(request.user.result);
+        
     next();
 });
 
@@ -163,7 +167,7 @@ app.get('/mypage', verification, function(request, response)
 
     db.collection('post').aggregate(searchCondition).toArray(function(err, result)
     {
-        response.render('mypage.ejs', { posts : result, user : request.user.result});
+        response.render('mypage.ejs', { posts : result });
     });
 });
 

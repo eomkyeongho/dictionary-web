@@ -19,6 +19,7 @@
       <% if (!user) { %>
         <p class="text-muted mr-sm-4 my-2"><a style="text-decoration:none;"href="/login" class="text-reset">Login</a></p>
       <%} else { %>
+        <p class="text-muted mr-sm-4 my-2"><a style="text-decoration:none;" class="text-reset">안녕하세요, <%=user.result.name%>님</a></p>
         <p class="text-muted mr-sm-4 my-2"><a style="text-decoration:none;"href="/logout" class="text-reset">Logout</a></p>
       <% } %>
       <form action="/search" method="GET" class="form-inline my-2 my-lg-0">

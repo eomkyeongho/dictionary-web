@@ -19,8 +19,8 @@
           <% for(var i=0; i<posts.length; i++)
           {%>
             <li class="list-group-item">
-              <a href="/detail/<%=posts[i]._id%>" style="text-decoration:none;">ToDo title : <%= posts[i].title %><br> 
-              Due date : <%= posts[i].date %><br></a>
+              <a href="/detail/<%=posts[i]._id%>" style="text-decoration:none;">어휘 : <%= posts[i].voca %><br> 
+              예제 : <%= posts[i].sentence %><br></a>
               <p class="text-muted"><%= posts[i].name %></p>
               <button type="button" class="btn btn-danger delete" data-post="<%=posts[i]._id%>" data-post_user_id="<%=posts[i].user_id%>">Delete</button>
             </li>
